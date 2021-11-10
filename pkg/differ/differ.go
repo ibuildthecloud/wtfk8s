@@ -109,17 +109,17 @@ func printKey(obj runtime.Object, mapper meta.RESTMapper) (string, error) {
 	}
 
 	buf := &strings.Builder{}
-	if meta.GetNamespace() != "" {
-		buf.WriteString(meta.GetNamespace())
-		buf.WriteString("/")
-	}
-	buf.WriteString(meta.GetName())
-	buf.WriteString(" ")
 	buf.WriteString(mapping.Resource.Resource)
 	if gvk.Group != "" {
 		buf.WriteString(".")
 		buf.WriteString(gvk.Group)
 	}
+	buf.WriteString(" ")
+	if meta.GetNamespace() != "" {
+		buf.WriteString(meta.GetNamespace())
+		buf.WriteString("/")
+	}
+	buf.WriteString(meta.GetName())
 	return buf.String(), nil
 }
 
