@@ -1,0 +1,24 @@
+name: checks
+
+on: [push]
+
+jobs:
+  go:
+    name: go checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '^1.16' # The Go version to download (if necessary) and use.
+      - run: go fmt ./...
+      - run: go mod tidy
+      - name: Verify no changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            exit 1
+          fi
+      - name: go vet
+        run: go vet ./...
+      - name: go test
+        run: go test -v ./...
