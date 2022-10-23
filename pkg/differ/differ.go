@@ -73,18 +73,19 @@ func (d *Differ) Print(obj runtime.Object) error {
 	return nil
 }
 
-func clearRevision(obj runtime.Object) (runtime.Object, error) {
+func clearRevisionAndManagedFields(obj runtime.Object) (runtime.Object, error) {
 	obj = obj.DeepCopyObject()
 	meta, err := meta.Accessor(obj)
 	if err != nil {
 		return nil, err
 	}
 	meta.SetResourceVersion("")
+	meta.SetManagedFields(nil)
 	return obj, nil
 }
 
 func toBytes(obj runtime.Object) ([]byte, error) {
-	obj, err := clearRevision(obj)
+	obj, err := clearRevisionAndManagedFields(obj)
 	if err != nil {
 		return nil, err
 	}
